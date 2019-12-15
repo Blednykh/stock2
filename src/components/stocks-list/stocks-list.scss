@@ -1,0 +1,7 @@
+.stocks-list{
+  &__button + &__button{
+    margin-left: 10px;
+  }
+  max-width: 400px;
+  min-width: 400px;
+}

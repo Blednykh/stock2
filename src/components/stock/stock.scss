@@ -1,0 +1,42 @@
+.stock__title{
+  margin-right: 20px;
+}
+.stock__img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+.stock{
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid darkslateblue;
+  padding: 20px 20px 20px 10px;
+}
+.stock:hover{
+  background: gainsboro;
+}
+
+.stock_color_red{
+  background: rgba(255, 0, 0, 0.45);
+}
+.stock_color_green{
+  background: rgba(0, 128, 0, 0.62);
+}
+
+.stock__content-box{
+  width: 100%;
+}
+
+.stock__bottom{
+  font-size: 10px;
+}
+.stock__row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stock__title{
+  font-size: 20px;
+}
