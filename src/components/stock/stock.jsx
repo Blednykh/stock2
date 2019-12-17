@@ -29,7 +29,9 @@ class Stock extends React.Component {
                         :
                         ""
                 }`}>
-                <img className="stock__img" src={image} alt={symbol}/>
+                <div className="stock__img-container">
+                    <img className="stock__img" src={image} alt={symbol}/>
+                </div>
                 <div className="stock__content-box">
                     <div className="stock__row stock__top">
                         <span className="stock__title">{title}</span>

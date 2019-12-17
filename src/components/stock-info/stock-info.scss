@@ -1,3 +1,68 @@
 .stock-info{
-  padding: 20px;
+  padding: 20px 50px 0;
+  overflow: hidden;
+  margin-left: 400px;
+
+  &__title-box{
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .title-box__bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__img{
+    height: 50px;
+    margin-right: 20px;
+  }
+  &__title{
+    font-size: 25px;
+    padding-bottom: 20px;
+  }
+  &__price{
+    font-size: 20px;
+  }
+  &__profile{
+    margin-bottom: 20px;
+  }
+
+  &__button-box{
+    display: flex;
+    align-items: center;
+    width: 80%;
+
+    & input{
+      padding: 10px;
+      border: 1px solid #238952;
+      height: 30px;
+      width: 200px;
+      margin-right: 20px;
+    }
+  }
+
+  .button{
+    width: 100px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    letter-spacing: 1px;
+    font-size: 15px;
+    margin-right: 20px;
+
+    &:hover{
+      opacity: 0.8;
+    }
+
+    &-sell{
+      background: rgba(255, 0, 0, 0.45);
+    }
+
+    &-buy{
+      background: rgba(0, 128, 0, 0.62);
+    }
+  }
 }

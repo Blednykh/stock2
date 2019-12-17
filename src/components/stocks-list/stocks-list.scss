@@ -1,7 +1,53 @@
 .stocks-list{
-  &__button + &__button{
-    margin-left: 10px;
-  }
   max-width: 400px;
   min-width: 400px;
+  padding-top: 20px;
+  background: gray;
+  color: white;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh;
+
+  &__button-bar{
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+  }
+
+  &__button{
+     /*    display: block;*/
+     /*height: 100%;
+     line-height: 40px;*/
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: none;
+    outline: none;
+    width: 25%;
+    color: white;
+   }
+  &__button_active{
+    border-bottom: 3px solid #5887ee;
+  }
+
+  &__button:nth-child(3){
+   width: 50%;
+  }
+
+  &__list{
+    height: 80%;
+    overflow: auto;
+  }
+}
+.search-bar{
+  background: #a5a5a5;
+}
+.search-input{
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #a5a5a5;
+}
+.search-input:focus{
+  border: 1px solid #5887ee;
 }

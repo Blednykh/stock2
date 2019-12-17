@@ -1,4 +1,21 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  outline: none;
+}
+
 .root{
   display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+}
+
+main{
+  position: relative;
+  display: flex;
   flex-direction: row;
+  height: 100%;
+  overflow: hidden;
 }

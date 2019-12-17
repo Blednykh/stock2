@@ -1,20 +1,28 @@
 .stock__title{
   margin-right: 20px;
 }
-.stock__img{
-  width: 50px;
-  height: 50px;
+.stock__img-container{
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
   border-radius: 50%;
   margin-right: 20px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: white;
+}
+.stock__img{
+  width: 100%;
 }
 .stock{
   display: flex;
   align-items: center;
-  border-bottom: 1px solid darkslateblue;
-  padding: 20px 20px 20px 10px;
+  border-bottom: 1px solid #a5a5a5;
+  padding: 10px 20px 10px 10px;
 }
 .stock:hover{
-  background: gainsboro;
+
 }
 
 .stock_color_red{
@@ -38,5 +46,5 @@
 }
 
 .stock__title{
-  font-size: 20px;
+  font-size: 15px;
 }
