@@ -15,90 +15,65 @@ async function apiRequest(url) {
 }
 
 
-async function setStocksInfo(stocksSymbols) {
-  const newDataCompanyProfiles = await apiRequest(
-    `https://financialmodelingprep.com/api/v3/company/profile/${stocksSymbols}`);
-  return newDataCompanyProfiles;
-}
-
-
 async function getStocksFromApi() {
 
   let newData = await apiRequest('https://financialmodelingprep.com/api/v3/stock/real-time-price');
 
-  newData = { stockList: newData.stockList.filter((item, id) => id < 20) };
-  newData.stockList.forEach((item, id)=>{
-    let stock = db.get('stocks')
-      .find((stock) => String(stock.symbol) === item.symbol);
+  newData = { stockList: newData.stockList.filter((item, id) => id < 50) };
+  const getStockProfile = (symbol) => {
+    return axios
+      .get(`https://financialmodelingprep.com/api/v3/company/profile/${symbol}`)
+      .then((data) => data.data)
+      .catch(err => console.log('err', err));
+  };
+  newData.parts = [];
+  for (let i = 0; i < newData.stockList.length; i += 25) {
+    newData.parts.push(newData.stockList.slice(i, i + 25));
 
-    let stockValue = stock.value();
-    (async () => {
-      const newDataCompanyProfiles = await apiRequest(
-        `https://financialmodelingprep.com/api/v3/company/profile/${item.symbol}`);
-      newData.stockList[id] = Object.assign(newData.stockList[id], newDataCompanyProfiles);
-      console.log(newDataCompanyProfiles.symbol);
-      if (newDataCompanyProfiles.symbol) {
-        if (stockValue !== undefined) {
-          stockValue = Object.assign(stockValue, newData.stockList[id]);
-          stock.assign(stockValue)
-            .write();
-        } else {
-          db.get('stocks')
-            .push(newData.stockList[id])
-            .write();
-        }
-      /*  db.get('stocks')
-          .assign(newData.stockList)
-          .write();*/
-      }
-    })();
+  }
+  newData.parts.forEach((part, number) => {
+    const timeoutFunction = (timeoutPart) =>{
+      console.log("PART");
+      console.log(timeoutPart);
+      Promise.all(timeoutPart.map(({ symbol }, id) => getStockProfile(symbol)))
+        .then((res) => {
+          res.forEach((resItem, id) => {
+            if (resItem.symbol) {
+             /* newData.stockList[id] = Object.assign(newData.stockList[id], resItem);*/
+
+              let stock = db.get('stocks')
+                .find((stock) => String(stock.symbol) === resItem.symbol);
+
+              let stockValue = stock.value();
+              if (stockValue !== undefined) {
+                stockValue = Object.assign(stockValue, resItem);
+                stock.assign(stockValue)
+                  .write();
+              /*  stockValue = Object.assign(stockValue, newData.stockList[id]);
+                stock.assign(stockValue)
+                  .write();*/
+              } else {
+                db.get('stocks')
+                  .push(resItem)
+                  .write();
+              /*  db.get('stocks')
+                  .push(newData.stockList[id])
+                  .write();*/
+              }
+            }
+          });
+        });
+    };
+    console.log(number);
+    const timeout = setTimeout(timeoutFunction, number * 15000, part);
   });
-
- /* let promise = new Promise((resolve, reject) => {
-    newData.stockList.forEach((item, id)=>{
-      (async () => {
-        const newDataCompanyProfiles = await setStocksInfo(item.symbol);
-        newData.stockList[id] = Object.assign(newData.stockList[id], newDataCompanyProfiles[0]);
-        console.log(newData.stockList[id],newDataCompanyProfiles);
-      })();
-      console.log(newData.stockList[id]);
-    });
-    resolve(newData);
-  });
-
-  newData = await promise;*/
-
-/*  newData.stockList.forEach((item, id)=>{
-    (async () => {
-      const newDataCompanyProfiles = await setStocksInfo(item.symbol);
-      newData.stockList[id] = Object.assign(newData.stockList[id], newDataCompanyProfiles[0]);
-      console.log(newData.stockList[id],newDataCompanyProfiles);
-    })();
-    console.log("asfdsgagSSSSSSSS",newData.stockList[id]);
-   /!* newData.stockList[id].assign(newData.stockList[id], newDataCompanyProfiles[0]);*!/
-  });*/
-
-  /*const stocksInfo = [];
-  newData.stockList.reduce((accumulator, stock) => {
-    if (accumulator.length < 3) {
-      accumulator.push(stock.symbol);
-      return accumulator;
-    } else {
-      const newDataCompanyProfiles = setStocksInfo(accumulator);
-      console.log(newDataCompanyProfiles);
-      return [];
-    }
-  }, []);*/
- /* db.get('stocks')
-    .assign(newData.stockList)
-    .write();*/
 }
 
 getStocksFromApi();
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 /*app.use(morgan('combined'));*/
