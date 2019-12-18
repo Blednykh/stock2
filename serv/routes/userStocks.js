@@ -11,12 +11,12 @@ router.get('/', (req, res, next) => {
   let stocks;
   if (!name || name === '') {
     stocks = db.get('userStocks')
-      .filter((item, id) => id >= offset && id < Number(offset) + 5);
+      .filter((item, id) => id >= offset && id < Number(offset) + 10);
   } else {
     stocks = db.get('userStocks')
       .filter((stock) => stock.symbol.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         stock.profile.companyName.toLowerCase().indexOf(name.toLowerCase()) !== -1)
-      .filter((item, id) => id >= offset && id < Number(offset) + 5);
+      .filter((item, id) => id >= offset && id < Number(offset) + 10);
   }
   res.json({
     status: 'OK',
@@ -27,7 +27,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
-  const data = db.get('userStocks').find((stock) => String(stock.id) === id);
+  const data = db.get('userStocks').find((stock) => String(stock.symbol) === id);
   res.json({
     status: 'OK',
     data: data
@@ -105,9 +105,9 @@ router.post('/', (req, res, next) => {
   const nowDate = new Date();
   const newTransaction = {
     symbol: body.symbol,
-    count: body.count,
+    transactionCount: body.count,
     date: nowDate,
-    price: body.price,
+    middlePrice: body.price,
     type: body.type,
     profile: db.get('stocks')
       .find((item) => item.symbol === body.symbol).value().profile
@@ -117,7 +117,7 @@ router.post('/', (req, res, next) => {
     .write();
 });
 
-router.post('/search', (req, res, next) => {
+/*router.post('/search', (req, res, next) => {
   const { body } = req;
 
   const stockShema = {
@@ -140,6 +140,6 @@ router.post('/search', (req, res, next) => {
     status: 'OK',
     data: data
   });
-});
+});*/
 
 module.exports = router;

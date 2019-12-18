@@ -11,12 +11,12 @@ router.get('/', (req, res, next) => {
   let transactions;
   if (!name || name === '') {
     transactions = db.get('transactionHistory')
-      .filter((item, id) => id >= offset && id < Number(offset) + 5);
+      .filter((item, id) => id >= offset && id < Number(offset) + 10);
   } else {
     transactions = db.get('transactionHistory')
       .filter((transaction) => transaction.symbol.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         transaction.profile.companyName.toLowerCase().indexOf(name.toLowerCase()) !== -1)
-      .filter((item, id) => id >= offset && id < Number(offset) + 5);
+      .filter((item, id) => id >= offset && id < Number(offset) + 10);
   }
   res.json({
     status: 'OK',
@@ -24,7 +24,7 @@ router.get('/', (req, res, next) => {
   });
 });
 
-router.post('/search', (req, res, next) => {
+/*router.post('/search', (req, res, next) => {
   const { body } = req;
 
   const stockShema = {
@@ -47,6 +47,6 @@ router.post('/search', (req, res, next) => {
     status: 'OK',
     data: data
   });
-});
+});*/
 
 module.exports = router;

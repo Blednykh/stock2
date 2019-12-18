@@ -36,7 +36,7 @@ router.get('/:id', (req, res, next) => {
   });
 });
 
-router.post('/search', (req, res, next) => {
+/*router.post('/search', (req, res, next) => {
   const { body } = req;
 
   const stockShema = {
@@ -59,6 +59,6 @@ router.post('/search', (req, res, next) => {
     status: 'OK',
     data: data
   });
-});
+});*/
 
 module.exports = router;
