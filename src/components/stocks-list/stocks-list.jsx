@@ -1,6 +1,6 @@
 import React from 'react';
 import Stock from "../stock";
-import tomorrowRequest from '../../api/tomorrow';
+
 
 import './stocks-list.scss';
 import {StocksContext} from '../../contexts/stocks-context';
@@ -84,20 +84,27 @@ class StocksList extends React.Component {
                     ref="myscroll"
                    /* ref={(element)=>{this.element = element}}*/
                 >
-                    {stocks.map(({symbol, price, profile, count, middlePrice, date, type}) => {
+                    {stocks.map((stock) => {
+                        return <Stock
+                            key={stock.symbol+stock.date}
+                            stock={stock}
+                            renderStockInfo={this.props.renderStockInfo}
+                        />
+                    })}
+                   {/* {stocks.map(({symbol, profile, count, transactionCount, middlePrice, date, type}) => {
                         return <Stock
                             key={symbol+date}
                             symbol={symbol}
                             price={middlePrice ? middlePrice : profile.price}
                             title={profile.companyName}
                             image={profile.image}
-                            count={count}
+                            count={page==="transactions" ? transactionCount : count}
                             date={date}
                             type={type}
                             profile={profile}
                             renderStockInfo={this.props.renderStockInfo}
                         />
-                    })}
+                    })}*/}
                 </div>
             </div>
         );

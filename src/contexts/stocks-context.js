@@ -1,5 +1,5 @@
 import React,{ createContext, Component} from 'react';
-import tomorrowRequest from '../api/tomorrow';
+import backRequest from '../api/back-request';
 
 export const StocksContext = createContext({
     stocks: [],
@@ -12,7 +12,8 @@ export const StocksContext = createContext({
     renderUserStockList(){},
     renderHistory(){},
     scrollLoading(){},
-    changeSearchValue(){}
+    changeSearchValue(){},
+    setTransaction(){}
 });
 
 class StocksProvider extends Component {
@@ -62,7 +63,7 @@ class StocksProvider extends Component {
 
     renderList = (page, searchValue) => {
         console.log("renderList",page, searchValue);
-        tomorrowRequest.get(`/${page}/?offset=0&name=${searchValue}`).then(responce => {
+        backRequest.get(`/${page}/?offset=0&name=${searchValue}`).then(responce => {
             const stocks = responce.data.data;
             console.log("renderList__stocks", stocks);
             this.setState({ stocks, page });
@@ -91,7 +92,7 @@ class StocksProvider extends Component {
     scrollLoading  = () => {
         let { stocks, page, offset, searchValue } = this.state;
         offset+=10;
-        tomorrowRequest.get(`/${page}/?offset=${offset}&name=${searchValue}`).then(responce => {
+        backRequest.get(`/${page}/?offset=${offset}&name=${searchValue}`).then(responce => {
             stocks = stocks.concat(responce.data.data);
             this.setState({ stocks, offset: offset});
         })
@@ -99,6 +100,30 @@ class StocksProvider extends Component {
     changeSearchValue = (searchValue, page) => {
         this.setState({ searchValue, offset: 0 });
         this.renderList(page, searchValue);
+    };
+    setTransaction = (symbol, count, price, type) => e => {
+        console.log(symbol, count, price, type);
+        backRequest.post('/userstocks/', {
+            symbol,
+            count,
+            price,
+            type,
+        }).then(responce => {
+            const data = responce.data.data;
+            if (data.count !== 0) {
+                let { stocks, page, searchValue } = this.state;
+                if(page === "transactions"){
+                    this.renderList(page, searchValue);
+                }
+                if(page === "userstocks"){
+                    const findIndex = stocks.findIndex(item =>item.symbol===data.symbol);
+                    console.log("aaaaaaa", data.symbol, findIndex, stocks[findIndex].count, stocks);
+                    stocks[findIndex].count = data.count;
+                    this.setState({ stocks });
+                }
+
+            }
+        })
     };
 
 
@@ -116,7 +141,8 @@ class StocksProvider extends Component {
                 renderUserStockList: this.renderUserStockList,
                 renderHistory: this.renderHistory,
                 scrollLoading: this.scrollLoading,
-                changeSearchValue: this.changeSearchValue
+                changeSearchValue: this.changeSearchValue,
+                setTransaction: this.setTransaction,
             }}>
                 {this.props.children}
             </StocksContext.Provider>

@@ -7,7 +7,6 @@ class Stock extends React.Component {
 
 
     render() {
-        console.log("props", this.props);
         let dateOptions = {
             year: 'numeric',
             month: 'numeric',
@@ -18,28 +17,44 @@ class Stock extends React.Component {
             second: 'numeric'
         };
 
-        const {image, title, price, count, date, symbol} = this.props;
+        const {
+            stock: {
+                profile,
+                transactionCount,
+                middlePrice,
+                count,
+                date,
+                symbol,
+                type
+            },
+            page,
+            renderStockInfo
+        } = this.props;
+
         const trueDate = date ? new Date(date) : undefined;
+
         return (
             <div
-                onClick={this.props.renderStockInfo(this.props)}
+                onClick={renderStockInfo(this.props.stock)}
                 className={`stock${
-                    this.props.type ?
-                        (this.props.type === "sell" ? ' stock_color_red' : ' stock_color_green')
+                    type ?
+                        (type === "sell" ? ' stock_color_red' : ' stock_color_green')
                         :
                         ""
                 }`}>
                 <div className="stock__img-container">
-                    <img className="stock__img" src={image} alt={symbol}/>
+                    <img className="stock__img" src={profile.image} alt={symbol}/>
                 </div>
                 <div className="stock__content-box">
                     <div className="stock__row stock__top">
-                        <span className="stock__title">{title}</span>
-                        <span className="stock__price">{price}$</span>
+                        <span className="stock__title">{profile.companyName}</span>
+                        <span className="stock__price">{profile.price}$</span>
+                        <span className="stock__changes">{profile.changes}</span>
+                        <span className="stock__percentage">{profile.changesPercentage}</span>
                     </div>
                     <div className="stock__row stock__bottom">
                         {trueDate && <span className="stock__date">{trueDate.toLocaleString("ru", dateOptions)}</span>}
-                        {count && <span className="stock__count">{count}шт</span>}
+                        {count && <span className="stock__count">{count} item(s)</span>}
                     </div>
                 </div>
 

@@ -2,15 +2,15 @@ import React from 'react';
 import Header from "../header";
 import StocksList from "../stocks-list/stocks-list";
 import StockInfo from "../stock-info/stock-info"
-import tomorrowRequest from "../../api/tomorrow";
 
 import './root.scss';
+import backRequest from "../../api/back-request";
 
 
 class Root extends React.Component {
     state = {
         selectedStockInfo: undefined,
-        stocks: [],
+        stock: {},
         page: "stocks",
         loading: false,
         message: null,
@@ -27,32 +27,13 @@ class Root extends React.Component {
 
 
     renderStockInfo = stockInfo => e => {
-        this.setState({ selectedStockInfo: stockInfo })
-    };
-
-    setTransaction = (symbol, count, price, type) => e => {
-        console.log(symbol, count, price, type);
-        tomorrowRequest.post('/userstocks/', {
-            symbol,
-            count,
-            price,
-            type,
-        }).then(responce => {
-            const data = responce.data.data;
-            if (data.count !== 0) {
-                let { stocks, page, searchValue } = this.state;
-                if(this.state.page === "transactions"){
-                    this.renderList(page, searchValue);
-                }
-                else{
-                    const findIndex = stocks.findIndex(item =>item.symbol===data.symbol);
-                    stocks[findIndex].count = data.count;
-                    this.setState({ stocks });
-                }
-
-            }
+        backRequest.get(`/userstocks/${stockInfo.symbol}`).then(responce => {
+            const stock = responce.data.data;
+            this.setState({ stock, selectedStockInfo: stockInfo});
         })
+      /*  this.setState({ selectedStockInfo: stockInfo })*/
     };
+
 
     render() {
         const {stocks, page, message, loading} = this.state;
@@ -76,6 +57,7 @@ class Root extends React.Component {
                     {this.state.selectedStockInfo && <StockInfo
                         stockInfo={this.state.selectedStockInfo}
                         setTransaction={this.setTransaction}
+                        stock={this.state.stock}
                     />}
                 </main>
             </div>
